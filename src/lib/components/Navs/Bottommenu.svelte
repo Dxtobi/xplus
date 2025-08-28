@@ -32,14 +32,14 @@
       id: "/campaigns",
       label: "Campaigns",
       icon: "material-symbols:campaign-rounded",
-      iconOutline: "solar:chart-outline",
+      iconOutline: "material-symbols:campaign-rounded",
       link: "/campaigns",
     },
     {
       id: "/engagements",
       label: "Engage.",
       icon: "duo-icons:approved",
-      iconOutline: "solar:chart-outline",
+      iconOutline: "duo-icons:approved",
       link: "/engagements",
     },
     {
