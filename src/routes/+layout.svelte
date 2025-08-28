@@ -43,13 +43,13 @@
 <div class="min-h-screen bg-neutral-900 text-neutral-100 py-15">
   {#if user}
     <nav
-      class=" bg-green-600/50 backdrop: shadow text-neutral-50 fixed left-0 top-0 w-full backdrop-blur-3xl z-20"
+      class=" bg-neutral-900/80 backdrop-blur-lg border-b border-neutral-800 shadow text-neutral-50 fixed left-0 top-0 w-full z-20"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
           <div class="flex items-center">
             <a href={user ? "/campaigns" : "/"} class="text-xl font-bold">
-              <img src="/logowhite.svg" alt="logo" class="w-8" />
+              <img src="/logowhite.svg" alt="logo" class="w-20" />
             </a>
           </div>
 

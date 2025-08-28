@@ -52,7 +52,7 @@ try {
 			email:locals.user.email,
 			// Crucial Step: Pass your internal transaction ID to Paystack
 			reference: newTransaction._id.toString(),
-			callback_url:`${PUBLIC_BASE_URL}/dashboard`,
+			callback_url:`${PUBLIC_BASE_URL}/profile`,
 			metadata: {
 				internal_transaction_id: newTransaction._id.toString()
 			}

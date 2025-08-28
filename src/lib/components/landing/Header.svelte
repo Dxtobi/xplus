@@ -16,7 +16,7 @@
       href="/"
       class="text-2xl font-bold bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent"
     >
-      <img src="logowhite.svg" alt="" class="w-5" />
+      <img src="logowhite.svg" alt="" class="w-20" />
     </a>
     <div class="hidden md:flex items-center gap-6 text-neutral-300 font-medium">
       <a href="#features" class="hover:text-green-400 transition-colors"
