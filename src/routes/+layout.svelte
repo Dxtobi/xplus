@@ -164,7 +164,7 @@
     <Header />
   {/if}
 
-  <main class=" md:p-10 p-4">
+  <main class=" md:p-10 p-2 py-5">
     {@render children()}
   </main>
 </div>
