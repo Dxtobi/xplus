@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+
+
+:root {
+/* === DARK THEME (Primary Focus) === */
+  /* Deep, neutral background as requested (matches Tailwind's neutral-900) */
+  --background: oklch(20.904% 0.00002 271.152);
+  --foreground: oklch(0.95 0.005 150); /* Off-white text for readability */
+
+  /* Cards are a slightly lighter shade of the background for depth */
+  --card: oklch(24.354% 0.00003 271.152);
+  --card-foreground: oklch(0.95 0.005 150);
+
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(0.95 0.005 150);
+
+  /* Primary Green (Vibrant & Accessible on dark background) */
+  --primary: oklch(0.75 0.2 150);
+  --primary-foreground: oklch(0.1 0.02 150); /* Dark green text for contrast */
+
+  /* A subtle dark gray for secondary buttons */
+  --secondary: oklch(0.25 0 0);
+  --secondary-foreground: oklch(0.95 0.005 150);
+
+  --muted: oklch(0.22 0.005 150);
+  --muted-foreground: oklch(0.65 0.01 150);
+  
+  /* Accent color is a cool, complementary Teal */
+  --accent: oklch(0.7 0.18 170);
+  --accent-foreground: oklch(0.1 0.02 170); /* Dark teal text */
+
+  /* A vibrant, warning red that pops on the dark background */
+  --destructive: oklch(0.65 0.25 25);
+  --destructive-foreground: oklch(0.1 0.02 25); /* Dark red text */
+
+  --border: oklch(23.075% 0.00003 271.152);
+  --input: #181818;
+  --ring: oklch(0.75 0.2 150 / 0.5); /* Semi-transparent primary green */
+
+  /* A beautiful, analogous palette for charts and data visualization */
+  --chart-1: oklch(0.75 0.2 150);  /* Primary Green */
+  --chart-2: oklch(0.7 0.18 170);  /* Teal */
+  --chart-3: oklch(0.85 0.22 120); /* Bright Lime */
+  --chart-4: oklch(0.75 0.18 190); /* Cyan */
+  --chart-5: oklch(0.65 0.16 210); /* Soft Blue */ /* A slightly larger radius for a modern feel */
+}
+
+.dark {
+  /* === DARK THEME (Primary Focus) === */
+  /* Deep, neutral background as requested (matches Tailwind's neutral-900) */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.95 0.005 150); /* Off-white text for readability */
+
+  /* Cards are a slightly lighter shade of the background for depth */
+  --card: oklch(0.18 0.005 150);
+  --card-foreground: oklch(0.95 0.005 150);
+
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(0.95 0.005 150);
+
+  /* Primary Green (Vibrant & Accessible on dark background) */
+  --primary: oklch(0.75 0.2 150);
+  --primary-foreground: oklch(0.1 0.02 150); /* Dark green text for contrast */
+
+  /* A subtle dark gray for secondary buttons */
+  --secondary: oklch(0.25 0 0);
+  --secondary-foreground: oklch(0.95 0.005 150);
+
+  --muted: oklch(0.22 0.005 150);
+  --muted-foreground: oklch(0.65 0.01 150);
+  
+  /* Accent color is a cool, complementary Teal */
+  --accent: oklch(0.7 0.18 170);
+  --accent-foreground: oklch(0.1 0.02 170); /* Dark teal text */
+
+  /* A vibrant, warning red that pops on the dark background */
+  --destructive: oklch(0.65 0.25 25);
+  --destructive-foreground: oklch(0.1 0.02 25); /* Dark red text */
+
+  --border: oklch(0.22 0.005 150);
+  --input: oklch(0.22 0.005 150);
+  --ring: oklch(0.75 0.2 150 / 0.5); /* Semi-transparent primary green */
+
+  /* A beautiful, analogous palette for charts and data visualization */
+  --chart-1: oklch(0.75 0.2 150);  /* Primary Green */
+  --chart-2: oklch(0.7 0.18 170);  /* Teal */
+  --chart-3: oklch(0.85 0.22 120); /* Bright Lime */
+  --chart-4: oklch(0.75 0.18 190); /* Cyan */
+  --chart-5: oklch(0.65 0.16 210); /* Soft Blue */
+}
+
+/* 
+  The rest of your file remains the same.
+  These variables will be consumed by the @theme block.
+*/
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar variables are inherited from the main theme */
+  --color-sidebar: var(--card);
+  --color-sidebar-foreground: var(--card-foreground);
+  --color-sidebar-primary: var(--primary);
+  --color-sidebar-primary-foreground: var(--primary-foreground);
+  --color-sidebar-accent: var(--accent);
+  --color-sidebar-accent-foreground: var(--accent-foreground);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--ring);
+}
+
+[style*="--opacity"] {
+  opacity: var(--opacity, 0);
+  transform: translateY(var(--translate-y, 20px));
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
