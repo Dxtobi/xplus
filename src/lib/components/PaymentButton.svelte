@@ -196,7 +196,7 @@
         </div>
 
         <div class="flex justify-between items-center text-sm">
-          <span class="text-neutral-400">Service Fee (10%):</span>
+          <span class="text-neutral-400">Service Fee (5%):</span>
           <span class="font-semibold text-neutral-200"
             >₦{fee.toLocaleString("en-NG", { minimumFractionDigits: 2 })}</span
           >
