@@ -898,97 +898,100 @@ return {
    * @param {string} [rejectionReason] - An optional reason if rejecting.
    * @returns {Promise<Engagement>} - The updated engagement document.
    */
-  async reviewEngagement(creatorId, engagementId, newStatus, rejectionReason = '') {
+  async reviewEngagements(creatorId, engagementIds, newStatus, rejectionReason = '') {
     const session = await mongoose.startSession();
     session.startTransaction();
 
+    console.log()
     try {
       const Engagement = model('Engagement');
       const Campaign = model('Campaign');
       const Transaction = model('Transaction');
-      
-      const engagement = await Engagement.findById(engagementId).session(session);
 
-      // --- Security & Validation ---
-      if (!engagement) {
-        throw new Error('Engagement not found.');
-      }
-      if (engagement.creatorId.toString() !== creatorId) {
-        throw new Error('You are not authorized to review this submission.');
-      }
-      if (engagement.status !== 'pending') {
-        throw new Error('This submission has already been reviewed.');
+      // Find all engagements by IDs
+      const engagements = await Engagement.find({ _id: { $in: engagementIds } }).session(session);
+
+      if (!engagements.length) {
+        throw new Error('No engagements found.');
       }
 
-      if (newStatus === 'approved') {
-        // --- Approval Logic ---
-        engagement.status = 'approved';
-
+      // Security & Validation: All must belong to creator and be pending
+      for (const engagement of engagements) {
+        // Find campaign to check creator
         const campaign = await Campaign.findById(engagement.campaignId).session(session);
         if (!campaign) throw new Error('Associated campaign not found.');
-
-        // 1. Create the earning transaction for the earner
-        let earningTransaction = await Transaction.findOne({
-          campaignId: campaign._id,
-          userId: engagement.userId,
-          engagementId: engagement._id,
-          type: 'engagement_earning'
-        }).session(session);
-
-        const amountToPay = engagement.earnedAmount || campaign.costPerAction || 0;
-
-        if (earningTransaction) {
-          // Update existing transaction
-          earningTransaction.amount = amountToPay;
-          earningTransaction.status = 'completed';
-          earningTransaction.description = `Earning from "${campaign.title}"`;
-          earningTransaction.paymentMethod = 'wallet';
-        } else {
-          // Create new transaction if none exists
-          earningTransaction = new Transaction({
-            userId: engagement.userId,
-            type: 'engagement_earning',
-            amount: amountToPay,
-            status: 'completed', // This transaction is completed instantly
-            campaignId: campaign._id,
-            engagementId: engagement._id,
-            description: `Earning from "${campaign.title}"`,
-            paymentMethod: 'wallet'
-          });
+        if (campaign.userId.toString() !== creatorId) {
+          throw new Error('You are not authorized to review this submission.');
         }
-        // The post-save hook on Transaction will automatically update the user's balance.
-        await earningTransaction.save({ session });
-
-        // 2. Increment the campaign's progress
-        campaign.currentClicks += 1;
-        
-        // 3. Check if the campaign is now complete
-        if (campaign.currentClicks >= campaign.targetAmount) {
-          campaign.status = 'completed';
-          campaign.isCompleted = true;
-          campaign.completedAt = new Date();
+        if (engagement.status !== 'pending') {
+          throw new Error('One or more submissions have already been reviewed.');
         }
-        await campaign.save({ session });
-        
-      } else if (newStatus === 'rejected') {
-        // --- Rejection Logic ---
-        engagement.status = 'rejected';
-        if (rejectionReason) {
-          engagement.rejectionReason = rejectionReason;
-        }
-        
-      } else {
-        throw new Error('Invalid review status provided.');
       }
 
-      await engagement.save({ session });
+      // Process each engagement
+      for (const engagement of engagements) {
+        const campaign = await Campaign.findById(engagement.campaignId).session(session);
+
+        if (newStatus === 'approved') {
+          engagement.status = 'approved';
+
+          // Create or update earning transaction
+          let earningTransaction = await Transaction.findOne({
+            campaignId: campaign._id,
+            userId: engagement.userId,
+            engagementId: engagement._id,
+            type: 'engagement_earning'
+          }).session(session);
+
+          const amountToPay = engagement.earnedAmount || campaign.costPerAction || 0;
+
+          if (earningTransaction) {
+            earningTransaction.amount = amountToPay;
+            earningTransaction.status = 'completed';
+            earningTransaction.description = `Earning from "${campaign.title}"`;
+            earningTransaction.paymentMethod = 'wallet';
+          } else {
+            earningTransaction = new Transaction({
+              userId: engagement.userId,
+              type: 'engagement_earning',
+              amount: amountToPay,
+              status: 'completed',
+              campaignId: campaign._id,
+              engagementId: engagement._id,
+              description: `Earning from "${campaign.title}"`,
+              paymentMethod: 'wallet'
+            });
+          }
+          await earningTransaction.save({ session });
+
+          // Increment campaign progress
+          campaign.currentClicks += 1;
+          if (campaign.currentClicks >= campaign.targetAmount) {
+            campaign.status = 'completed';
+            campaign.isCompleted = true;
+            campaign.completedAt = new Date();
+          }
+          await campaign.save({ session });
+
+        } else if (newStatus === 'rejected') {
+          engagement.status = 'rejected';
+          if (rejectionReason) {
+            engagement.rejectionReason = rejectionReason;
+          }
+        } else {
+          throw new Error('Invalid review status provided.');
+        }
+
+        await engagement.save({ session });
+      }
+
       await session.commitTransaction();
-      return engagement;
+      return engagements;
 
     } catch (error) {
       await session.abortTransaction();
-      console.error("Review Engagement Transaction Error:", error);
-      throw error; // Re-throw the error to be handled by the API route
+      console.error("Review Engagements Transaction Error:", error);
+      throw error;
     } finally {
       session.endSession();
     }
