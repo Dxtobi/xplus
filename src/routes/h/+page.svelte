@@ -68,7 +68,7 @@
     </div>
   </div>
 
-  <div class="sm:hidden fixed bottom-20 right-4 z-50">
+  <div class="sm:hidden fixed bottom-20 right-4 z-50 flex-col flex">
     <!-- svelte-ignore a11y_consider_explicit_label -->
     <button
       onclick={() => (currentView = "create")}
@@ -78,6 +78,7 @@
       <!-- svelte-ignore element_invalid_self_closing_tag -->
       <iconify-icon icon="solar:add-square-bold" width="24" height="24" />
     </button>
+    <p>Create</p>
   </div>
 {:else}
   <CreateCampaign {closeForm} />
