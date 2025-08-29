@@ -14,7 +14,7 @@ export async function POST({ request, locals }) {
   }
 
   try {
-    const result = await ApiHelpers.reviewEngagement(user.id, engagementId, status, reason);
+    const result = await ApiHelpers.reviewEngagements(user.id, engagementId, status, reason);
     return json(result);
   } catch (error) {
     return json({ message: error.message }, { status: 500 });
