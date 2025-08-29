@@ -3,13 +3,16 @@
   import { toast } from "svelte-sonner";
   import { slide } from "svelte/transition";
   import { fade } from "svelte/transition";
+  import { APP_PERCENTAGE_PER_DEPOSIT } from "$lib/utils/constants";
 
   let baseAmount = $state(null);
   let email = $state(""); // This should be dynamically set from user data
   let isLoading = $state(false);
   let isOpen = $state(false);
 
-  let fee = $derived(baseAmount > 0 ? baseAmount * 0.1 : 0);
+  let fee = $derived(
+    baseAmount > 0 ? baseAmount * APP_PERCENTAGE_PER_DEPOSIT : 0
+  );
   let totalAmount = $derived(baseAmount > 0 ? baseAmount + fee : 0);
 
   function toggleModal() {

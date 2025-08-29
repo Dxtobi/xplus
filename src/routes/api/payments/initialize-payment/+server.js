@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { PAY_SECR } from '$env/static/private';
 import { Transaction } from '$lib/server/db/models/index.js';
 import { PUBLIC_BASE_URL } from '$env/static/public';
+import { APP_PERCENTAGE_PER_DEPOSIT } from '$lib/utils/constants.js';
 
 export async function POST({ request, locals }) {
     // console.log(locals.user)
@@ -12,7 +13,7 @@ if (!baseAmount || typeof baseAmount !== 'number' || baseAmount <= 0) {
 }
 
 // 1. Securely calculate the final amount on the server
-const fee = baseAmount * 0.1;
+const fee = baseAmount * APP_PERCENTAGE_PER_DEPOSIT;
 const totalAmount = baseAmount + fee;
 const amountInKobo = Math.round(totalAmount * 100);
 

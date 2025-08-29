@@ -94,3 +94,5 @@ export const actionTypes = [
      cost:10
   }
 ];
+
+export const APP_PERCENTAGE_PER_DEPOSIT = 0.05
