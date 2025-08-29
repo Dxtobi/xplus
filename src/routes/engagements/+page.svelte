@@ -42,7 +42,7 @@
 
     try {
       // This would be a new method in your ApiService to handle bulk reviews
-      // await api.reviewSubmissions({ engagementIds, status, reason });
+      await api.reviewSubmissions({ engagementIds, status, reason });
       toast.success(`${engagementIds.length} submission(s) ${status}.`);
     } catch (error) {
       // On error, revert the optimistic update

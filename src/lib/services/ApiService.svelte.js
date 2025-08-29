@@ -188,6 +188,11 @@ class ApiService {
     return this.#handleResponse(request, { successMsg: 'Account added' });
   }
 
+  reviewSubmissions(formData){
+    const request = this.#request('/engagements/review', 'POST', { body: formData });
+    return this.#handleResponse(request, { successMsg: 'Account added' });
+  }
+
 }
 
 // Export a singleton instance

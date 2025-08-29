@@ -21,13 +21,13 @@
       icon: "solar:home-2-bold-duotone",
       iconOutline: "solar:home-2-outline",
     },
-    {
-      id: "/transactions",
-      label: "Transactions",
-      icon: "solar:card-bold-duotone",
-      iconOutline: "solar:card-outline",
-      link: "/transactions",
-    },
+    // {
+    //   id: "/transactions",
+    //   label: "Transactions",
+    //   icon: "solar:card-bold-duotone",
+    //   iconOutline: "solar:card-outline",
+    //   link: "/transactions",
+    // },
     {
       id: "/campaigns",
       label: "Campaigns",

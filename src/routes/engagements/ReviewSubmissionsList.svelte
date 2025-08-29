@@ -1,8 +1,5 @@
 <script>
-  // This component is nearly identical to the one from the previous prompt.
-  // The key is that it DISPATCHES events instead of handling API calls itself.
   import { createEventDispatcher } from "svelte";
-
   import { slide } from "svelte/transition";
   import SubmissionRow from "./SubmissionRow.svelte";
 
@@ -51,7 +48,7 @@
           >Reject</button
         >
         <button
-          on:click={handleBulkApprove}
+          onclick={handleBulkApprove}
           class="px-4 py-1.5 text-sm bg-green-600 text-white font-semibold rounded-md hover:bg-green-700"
           >Approve</button
         >
@@ -69,7 +66,7 @@
       <label class="flex items-center"
         ><input
           type="checkbox"
-          on:change={toggleSelectAll}
+          onchange={toggleSelectAll}
           checked={areAllSelected}
           class="w-4 h-4 bg-neutral-700 border-neutral-600 text-green-500 rounded focus:ring-green-500/50"
         /></label
