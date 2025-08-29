@@ -2,7 +2,7 @@
   import { animateOnScroll } from "$lib/actions/animateOnScroll";
 
   function signInWithGoogle() {
-    console.log("Signing in with Google...");
+    window.location.href = "/auth/google";
   }
 </script>
 
