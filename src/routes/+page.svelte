@@ -13,7 +13,7 @@
     <Hero />
     <HowItWorks />
     <Features />
-    <AppShowcase />
+    <!-- <AppShowcase /> -->
     <FinalCta />
   </main>
   <Footer />
