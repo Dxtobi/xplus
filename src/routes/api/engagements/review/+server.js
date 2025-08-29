@@ -9,12 +9,12 @@ export async function POST({ request, locals }) {
 
   const { engagementIds, status, reason } = await request.json();
 
-  if (!engagementId || !status) {
+  if (!engagementIds || !status) {
     return json({ message: 'Engagement ID and status are required.' }, { status: 400 });
   }
 
   try {
-    const result = await ApiHelpers.reviewEngagements(user.id, engagementId, status, reason);
+    const result = await ApiHelpers.reviewEngagements(user.id, engagementIds, status, reason);
     return json(result);
   } catch (error) {
     return json({ message: error.message }, { status: 500 });
