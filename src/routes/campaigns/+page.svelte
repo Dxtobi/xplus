@@ -5,6 +5,7 @@
 
   import { actionTypes, platforms } from "$lib/utils/constants";
   import { api } from "$lib/services/ApiService.svelte";
+  import { toast } from "svelte-sonner";
 
   const { data } = $page; // Use the store directly
 
@@ -31,24 +32,9 @@
 
     try {
       // In a real app, this redirects to the actual link first
-      window.open(post.link, "_blank");
+      // window.open(post.link, "_blank");
 
-      await api.engageWithCampaign(post._id);
-
-      // On successful API call, permanently update the local state.
-      // The toast notification is handled by the ApiService.
-      const index = campaigns.findIndex((p) => p._id === post._id);
-      if (index !== -1) {
-        campaigns[index].currentClicks += 1;
-        if (campaigns[index].currentClicks >= campaigns[index].targetAmount) {
-          campaigns[index].isCompleted = true;
-          campaigns[index].status = "completed";
-        } else {
-          // Re-enable button if not complete
-          campaigns[index].isCompleted = false;
-        }
-        campaigns = [...campaigns]; // Trigger reactivity again with final state
-      }
+      toast.warning("You cant engage on your own campaigns");
     } catch (error) {
       console.error("Engagement failed:", error);
       // Revert UI on failure
