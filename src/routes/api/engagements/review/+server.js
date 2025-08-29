@@ -7,7 +7,7 @@ export async function POST({ request, locals }) {
     return json({ message: 'Authentication required' }, { status: 401 });
   }
 
-  const { engagementId, status, reason } = await request.json();
+  const { engagementIds, status, reason } = await request.json();
 
   if (!engagementId || !status) {
     return json({ message: 'Engagement ID and status are required.' }, { status: 400 });
