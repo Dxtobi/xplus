@@ -788,7 +788,7 @@ const ApiHelpers = {
     };
   },
 
-  /**
+   /**
    * For CREATORS: Gets a paginated list of pending engagements for their campaigns.
    * This is the data source for the "Review Submissions" page.
    * @param {string} creatorId - The ID of the user who created the campaigns.
@@ -798,95 +798,125 @@ const ApiHelpers = {
    */
   async getPendingEngagementsForCreator(creatorId, page = 1, limit = 10) {
     const Engagement = model('Engagement');
-    
-  const query = [
-    {
-      $lookup: {
-        from: 'campaigns',
-        localField: 'campaignId',
-        foreignField: '_id',
-        as: 'campaign'
+    const creatorObjectId = new Types.ObjectId(creatorId);
+
+    // Pipeline for fetching paginated engagements
+    const engagementsPipeline = [
+      {
+        $lookup: {
+          from: 'campaigns',
+          localField: 'campaignId',
+          foreignField: '_id',
+          as: 'campaign'
+        }
+      },
+      {
+        $unwind: { path: '$campaign', preserveNullAndEmptyArrays: true }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'earner'
+        }
+      },
+      {
+        $unwind: { path: '$earner', preserveNullAndEmptyArrays: true }
+      },
+      {
+        $match: {
+          'campaign.userId': creatorObjectId,
+          status: 'pending'
+        }
+      },
+      {
+        $sort: { createdAt: -1 }
+      },
+      {
+        $skip: (page - 1) * limit
+      },
+      {
+        $limit: limit
+      },
+      {
+        $addFields: {
+          campaignId: '$campaign',
+          userId: '$earner'
+        }
+      },
+      {
+        $project: {
+          campaign: 0,
+          earner: 0
+        }
       }
-    },
-    {
-      $unwind: { path: '$campaign', preserveNullAndEmptyArrays: true }
-    },
-    // Populate the engagement's user (earner) so we can access avatar, name, etc.
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'userId',
-        foreignField: '_id',
-        as: 'earner'
+    ];
+
+    // Pipeline for counting total matching documents
+    const countPipeline = [
+      {
+        $lookup: {
+          from: 'campaigns',
+          localField: 'campaignId',
+          foreignField: '_id',
+          as: 'campaign'
+        }
+      },
+      {
+        $unwind: { path: '$campaign', preserveNullAndEmptyArrays: true }
+      },
+      {
+        $match: {
+          'campaign.userId': creatorObjectId,
+          status: 'pending'
+        }
+      },
+      {
+        $count: "totalCount"
       }
-    },
-    {
-      $unwind: { path: '$earner', preserveNullAndEmptyArrays: true }
-    },
-    {
-      $match: {
-        'campaign.userId': new Types.ObjectId(creatorId),
-        status: 'pending'
-      }
-    },
-    {
-      $sort: { createdAt: -1 }
-    },
-    {
-      $skip: (page - 1) * limit
-    },
-    {
-      $limit: limit
-    },
-    // Attach the populated campaign and user details in expected fields
-    {
-      $addFields: {
-        campaignId: '$campaign',     // keep compatibility with code that expects campaignId.platform
-        userId: '$earner'            // replace userId ObjectId with populated user doc (contains avatar)
-      }
-    },
-    {
-      $project: {
-        campaign: 0,
-        earner: 0
-      }
+    ];
+
+    try {
+      const engagementsPromise = Engagement.aggregate(engagementsPipeline);
+      const totalResultPromise = Engagement.aggregate(countPipeline);
+
+      const [engagements, totalResult] = await Promise.all([engagementsPromise, totalResultPromise]);
+
+      const total = totalResult.length > 0 ? totalResult[0].totalCount : 0;
+
+      // After fetching, map over the results to add the constructed link.
+      const engagementsWithProofLinks = engagements.map(eng => {
+        let proofLink = '#'; // Default fallback
+        const platform = eng.campaignId?.platform; // Use optional chaining for safety
+        const username = eng.proofUsername ? eng.proofUsername.replace('@', '') : ''; // Sanitize username, check if proofUsername exists
+
+        if (platform === 'Twitter/X') {
+          proofLink = `https://x.com/${username}`;
+        } else if (platform === 'Instagram') {
+          proofLink = `https://instagram.com/${username}`;
+        } else if (platform === 'TikTok') {
+          proofLink = `https://tiktok.com/@${username}`;
+        }
+        // Add other platforms as needed...
+
+        return {
+          ...eng,
+          proofLink // Add the new property to the object
+        };
+      });
+
+      return {
+        engagements: engagementsWithProofLinks,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        total
+      };
+    } catch (error) {
+      console.error("Error in getPendingEngagementsForCreator:", error);
+      // Re-throw or handle error appropriately
+      throw error;
     }
-  ];
-
-const engagements = await Engagement.aggregate(query);
-      
-    const total = await Engagement.countDocuments(query);
-    // After fetching, map over the results to add the constructed link.
-const engagementsWithProofLinks = engagements.map(eng => {
-  let proofLink = '#'; // Default fallback
-  const platform = eng.campaignId.platform;
-  const username = eng.proofUsername.replace('@', ''); // Sanitize username
-
-  if (platform === 'Twitter/X') {
-    proofLink = `https://x.com/${username}`;
-  } else if (platform === 'Instagram') {
-    proofLink = `https://instagram.com/${username}`;
-  } else if (platform === 'TikTok') {
-    proofLink = `https://tiktok.com/@${username}`;
-  }
-  // Add other platforms as needed...
-
-  return {
-    ...eng,
-    proofLink // Add the new property to the object
-  };
-});
-
-
-
-return {
-  engagements: engagementsWithProofLinks, // Return the enhanced data
-  totalPages: Math.ceil(total / limit),
-  currentPage: page,
-  total
-};
-
-    
   },
 
   /**
@@ -902,7 +932,7 @@ return {
     const session = await mongoose.startSession();
     session.startTransaction();
 
-    console.log()
+   
     try {
       const Engagement = model('Engagement');
       const Campaign = model('Campaign');

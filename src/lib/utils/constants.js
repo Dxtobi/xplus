@@ -56,42 +56,42 @@ export const actionTypes = [
     label: 'Clicks', 
     icon: 'mdi:cursor-default-click-outline',
     color: '#22c55e', // Tailwind green-500
-    cost:2
+    cost:5
   },
   { 
     value: 'likes', 
     label: 'Likes', 
     icon: 'mdi:heart-outline',
     color: '#ef4444',
-    cost:2
+    cost:5
   },
   { 
     value: 'follows', 
     label: 'Follows', 
     icon: 'mdi:account-plus-outline',
     color: '#3b82f6' ,
-    cost:5
+    cost:15
   },
   { 
     value: 'views', 
     label: 'Views', 
     icon: 'mdi:eye-outline',
     color: '#8b5cf6' ,
-    cost:2
+    cost:5
   },
   { 
     value: 'comments', 
     label: 'Comments', 
     icon: 'mdi:message-outline',
     color: '#f97316',
-     cost:5
+     cost:15
   },
   { 
     value: 'shares', 
     label: 'Shares', 
     icon: 'mdi:share-outline',
     color: '#14b8a6',
-     cost:10
+     cost:15
   }
 ];
 

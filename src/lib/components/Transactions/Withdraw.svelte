@@ -112,7 +112,7 @@
 </script>
 
 <div
-  class="bg-neutral-800 p-6 rounded-2xl border border-neutral-700 w-full max-w-md mx-auto"
+  class="bg-neutral-800 p-6 rounded-2xl border border-neutral-700 w-full max-w-md mx-auto relative"
   in:fly={{ delay: 50, duration: 500, x: 200, y: 0 }}
   out:fly={{ delay: 50, duration: 500, x: -200, y: 0 }}
 >

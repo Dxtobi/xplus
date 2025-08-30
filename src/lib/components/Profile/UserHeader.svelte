@@ -29,6 +29,9 @@
   <div
     class="fixed min-h-[100vh] w-full left-0 top-0 flex justify-center items-center backdrop-blur-3xl"
   >
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class=" absolute h-full w-full" onclick={closeModel}></div>
     <div class="m-auto w-[90%]">
       <Withdraw {closeModel} />
     </div>

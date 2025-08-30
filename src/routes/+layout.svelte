@@ -9,6 +9,7 @@
   import { quintIn, quintOut } from "svelte/easing";
   import NavigationFooter from "$lib/components/Navs/Bottommenu.svelte";
   import Header from "$lib/components/landing/Header.svelte";
+  import Seo from "$lib/components/SEO.svelte";
 
   let activeTab = $state("/");
   function handleNavigation(tabId) {
@@ -39,6 +40,7 @@
   let showMenu = $state(false);
 </script>
 
+<Seo />
 <Toaster richColors />
 <div class="min-h-screen bg-neutral-900 text-neutral-100 py-15">
   {#if user}

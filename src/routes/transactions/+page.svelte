@@ -6,6 +6,7 @@
   import TransactionList from "$lib/components/Transactions/TransactionList.svelte";
   import TransactionStats from "$lib/components/Transactions/TransactionStats.svelte";
   import TransactionFilters from "$lib/components/Transactions/TransactionFilters.svelte";
+  import { goto } from "$app/navigation";
 
   let transactions = $derived(page.data.transactions.transactions);
   let pagination = $derived(page.data.transactions.pagination);
@@ -71,6 +72,18 @@
 </script>
 
 <div class="min-h-screen bg-background">
+  <button
+    class="px-4 py-1 rounded-2xl bg-neutral-800 flex items-center gap-2 my-4"
+    onclick={() => history.back()}
+  >
+    <iconify-icon
+      icon="ion:arrow-back"
+      width="20"
+      height="20"
+      style="color: #fff"
+    ></iconify-icon>
+    <span>Back</span>
+  </button>
   <div class="max-w-4xl mx-auto space-y-6">
     <!-- Header -->
     <div
