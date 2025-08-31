@@ -96,3 +96,4 @@ export const actionTypes = [
 ];
 
 export const APP_PERCENTAGE_PER_DEPOSIT = 0.05
+export const MIN_WITHDRAWAL = 5000;

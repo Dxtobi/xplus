@@ -17,15 +17,19 @@
         </p>
       </div>
       <div class="flex items-center gap-4 text-2xl text-neutral-400">
-        <a href="#" class="hover:text-green-400 transition-colors"
-          ><iconify-icon icon="mdi:twitter" /></a
+        <!-- svelte-ignore a11y_consider_explicit_label -->
+        <a
+          href="https://x.com/xplusgigs"
+          target="_blank"
+          class="hover:text-green-400 transition-colors"
+          ><iconify-icon icon="mdi:twitter"></iconify-icon></a
         >
-        <a href="#" class="hover:text-green-400 transition-colors"
+        <!-- <a href="#" class="hover:text-green-400 transition-colors"
           ><iconify-icon icon="mdi:instagram" /></a
         >
         <a href="#" class="hover:text-green-400 transition-colors"
           ><iconify-icon icon="mdi:linkedin" /></a
-        >
+        > -->
       </div>
     </div>
   </div>

@@ -6,6 +6,7 @@
   import { fly, slide } from "svelte/transition";
   import { flip } from "svelte/animate";
   import { invalidateAll } from "$app/navigation";
+  import { MIN_WITHDRAWAL } from "$lib/utils/constants";
 
   const { closeModel } = $props();
   // This data would be passed down from the page
@@ -18,9 +19,11 @@
   let isAddingAccount = $state(false);
   let isWithdrawing = $state(false);
 
-  const MIN_WITHDRAWAL = 5000;
   let hasRecipient = $derived(user && user.paystackRecipientCode);
 
+  $effect(() => {
+    hasRecipient = user && user.paystackRecipientCode;
+  });
   // Fetch the list of Nigerian banks from Paystack when the component mounts
   onMount(async () => {
     try {
@@ -64,6 +67,8 @@
       user.paystackRecipientCode = result.recipientCode;
       user.bankName = result.bankName;
       user.accountNumberLast4 = result.accountNumberLast4;
+
+      console.log(result);
       toast.success("Bank account added successfully!");
     } catch (error) {
       // ApiService will show the toast for the error

@@ -4,14 +4,14 @@
   const {
     title = "XPlus+", // The main title of the page
     description = `The ultimate platform connecting creators who need engagement with users
-      who want to earn. Real tasks, real rewards, real growth.`, // A brief description of the page content
+      who want to earn. Real tasks, real rewards, real growth real content engagement from real users not bots`, // A brief description of the page content
     image = "/logo.png", // The URL of the image for social sharing (og:image, twitter:image)
     noIndex = true, // If true, tells search engines not to index this page
     canonical = "https://xplus-rosy.vercel.app/", // The canonical URL for the page
     siteName = "DXtech", // Your site's name, can be overridden
     ogType = "website", // Open Graph type (e.g., 'article', 'website')
     twitterCard = "summary_large_image", // Twitter card type
-    twitterSite = "@yourTwitterHandle", // Your site's Twitter handle
+    twitterSite = "@xplusgigs", // Your site's Twitter handle
     jsonLd = null, // A JavaScript object for structured data
   } = $props();
 
