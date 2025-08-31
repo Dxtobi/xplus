@@ -252,6 +252,11 @@ const engagementSchema = new Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending'
   },
+   approvedAt: { type: Date }, 
+    notes: [{ 
+        content: String,
+        timestamp: { type: Date, default: Date.now }
+    }],
   campaignId: {
     type: Schema.Types.ObjectId,
     ref: 'Campaign',

@@ -1,14 +1,12 @@
 import { json } from '@sveltejs/kit';
-// Make sure to import the Engagement model
 import { User, Transaction, Engagement } from '$lib/server/db/models/index';
 import { PAY_SECR } from '$env/static/private';
 
 const MIN_WITHDRAWAL = 5000;
 const REQUIRED_APPROVAL_RATE = 0.80; // 80%
+const AUTO_APPROVE_DAYS = 3; // Engagements older than 3 days will be auto-approved
 
 export async function POST({ request, locals }) {
-	// --- NO SESSION OR TRANSACTION NEEDED ---
-
 	try {
 		const currentUser = locals.user;
 		if (!currentUser) {
@@ -33,36 +31,56 @@ export async function POST({ request, locals }) {
 			throw new Error(`Minimum withdrawal amount is ₦${MIN_WITHDRAWAL}.`);
 		}
 
-		// --- NEW ETHICAL WITHDRAWAL CHECK ---
-		// 1. Get the total number of engagements the user has submitted.
-		const totalEngagements = await Engagement.countDocuments({ userId: user._id });
+		// --- NEW: AUTOMATICALLY APPROVE OLD PENDING ENGAGEMENTS ---
+		const threeDaysAgo = new Date();
+		threeDaysAgo.setDate(threeDaysAgo.getDate() - AUTO_APPROVE_DAYS);
 
-		// 2. Get the number of their engagements that have been approved.
+		// Find and update engagements that are 'pending' and older than 3 days
+		// We use `userId: user._id` to ensure only the current user's engagements are affected.
+		const { modifiedCount } = await Engagement.updateMany(
+			{
+				userId: user._id,
+				status: 'pending',
+				createdAt: { $lte: threeDaysAgo } // Engagements created on or before threeDaysAgo
+			},
+			{
+				$set: { status: 'approved', approvedAt: new Date() }, // Set status to approved and record approval time
+				$push: { notes: { content: 'Auto-approved due to inactivity.', timestamp: new Date() } } // Add a note
+			}
+		);
+
+		if (modifiedCount > 0) {
+			console.log(`Auto-approved ${modifiedCount} old engagements for user ${user._id}`);
+			// If engagements were auto-approved, we might want to refresh the user's data
+			// (though in this specific flow, we are just re-calculating the approval rate,
+			// so a full refresh of the user object might not be strictly necessary here
+			// if their balance isn't affected by approval itself, only by the subsequent withdrawal).
+			// If approval gives direct earnings, that would also need to be handled here or in a separate process.
+		}
+		// --- END OF AUTO-APPROVAL ---
+
+
+		// --- ETHICAL WITHDRAWAL CHECK ---
+		const totalEngagements = await Engagement.countDocuments({ userId: user._id });
 		const approvedEngagements = await Engagement.countDocuments({
 			userId: user._id,
 			status: 'approved'
 		});
 
-		// 3. Calculate the approval rate.
 		let approvalRate = 0;
 		if (totalEngagements > 0) {
 			approvalRate = approvedEngagements / totalEngagements;
 		} else {
-			// If the user has zero engagements, they automatically pass this check.
-			// This allows users to withdraw funds they may have from a signup bonus
-			// or other means without needing to engage first.
-			approvalRate = 1; // Set to 100% to pass the check.
+			approvalRate = 1; // Pass if no engagements, as before.
 		}
 
-		// 4. Check if the user meets the required approval rate.
 		if (approvalRate < REQUIRED_APPROVAL_RATE) {
 			const currentPercentage = Math.round(approvalRate * 100);
-			// Provide a clear, actionable error message to the user.
 			throw new Error(
 				`Withdrawal requirement not met. Your engagement approval rate is ${currentPercentage}%, but it must be at least 80%. Please wait for more of your submissions to be reviewed and approved.`
 			);
 		}
-		// --- END OF NEW CHECK ---
+		// --- END OF ETHICAL CHECK ---
 
 
 		// 1. Create a pending withdrawal transaction
@@ -77,7 +95,6 @@ export async function POST({ request, locals }) {
 		await withdrawalTransaction.save();
 
 		// 2. Deduct balance from user's account
-		// We use $inc for a safer update
 		await User.findByIdAndUpdate(user._id, { $inc: { balance: -amount } });
 
 		// 3. Initiate the transfer with Paystack
@@ -100,7 +117,6 @@ export async function POST({ request, locals }) {
 
 		if (!data.status) {
 			// --- MANUAL ROLLBACK LOGIC ---
-			// If Paystack fails, we reverse our database operations.
 			console.log('Paystack failed. Reverting database changes...');
 
 			// 1. Refund the user's balance
@@ -121,7 +137,6 @@ export async function POST({ request, locals }) {
 		return json({ message: 'Withdrawal is being processed!' });
 	} catch (error) {
 		console.error('Withdrawal Error:', error);
-		// Return the specific, user-friendly error message we created
 		return json({ message: error.message || 'An internal server error occurred.' }, { status: 400 });
 	}
 }
