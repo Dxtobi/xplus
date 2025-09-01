@@ -175,22 +175,22 @@ class ApiService {
 
   addPaystackRecipient(userData){
     const request = this.#request('/payouts/add-recipient', 'POST', { body: userData });
-    return this.#handleResponse(request, { successMsg: 'Account added' });
+    return this.#handleResponse(request, { successMsg: 'Recipient Account added' });
   }
 
   initiateWithdrawal(userData){
     const request = this.#request('/payouts/initiate-withdrawal', 'POST', { body: userData });
-    return this.#handleResponse(request, { successMsg: 'Account added' });
+    return this.#handleResponse(request, { successMsg: 'Request Submitted' });
   }
 
   submitEngagementProof(formData){
     const request = this.#request('/payouts/initiate-withdrawal', 'POST', { body: formData });
-    return this.#handleResponse(request, { successMsg: 'Account added' });
+    return this.#handleResponse(request, { successMsg: 'Submitted' });
   }
 
   reviewSubmissions(formData){
     const request = this.#request('/engagements/review', 'POST', { body: formData });
-    return this.#handleResponse(request, { successMsg: 'Account added' });
+    return this.#handleResponse(request, { successMsg: 'Processing..' });
   }
 
 }

@@ -22,8 +22,12 @@
   let hasRecipient = $derived(user && user.paystackRecipientCode);
 
   $effect(() => {
-    hasRecipient = user && user.paystackRecipientCode;
+    callUpdate();
   });
+
+  const callUpdate = () => {
+    hasRecipient = user && user.paystackRecipientCode;
+  };
   // Fetch the list of Nigerian banks from Paystack when the component mounts
   onMount(async () => {
     try {
@@ -67,9 +71,8 @@
       user.paystackRecipientCode = result.recipientCode;
       user.bankName = result.bankName;
       user.accountNumberLast4 = result.accountNumberLast4;
-
+      callUpdate();
       console.log(result);
-      toast.success("Bank account added successfully!");
     } catch (error) {
       // ApiService will show the toast for the error
     } finally {
