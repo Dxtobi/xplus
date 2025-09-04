@@ -19,7 +19,8 @@
         on:click={signInWithGoogle}
         class="flex w-fit mx-auto items-center gap-3 bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform duration-300"
       >
-        <iconify-icon icon="flat-color-icons:google" class="text-2xl" />
+        <iconify-icon icon="flat-color-icons:google" class="text-2xl"
+        ></iconify-icon>
         <span>Sign Up Free</span>
       </button>
     </div>

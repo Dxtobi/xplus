@@ -24,12 +24,19 @@
           class="hover:text-green-400 transition-colors"
           ><iconify-icon icon="mdi:twitter"></iconify-icon></a
         >
-        <!-- <a href="#" class="hover:text-green-400 transition-colors"
-          ><iconify-icon icon="mdi:instagram" /></a
+        <!-- svelte-ignore a11y_consider_explicit_label -->
+        <a
+          href="https://www.instagram.com/xplusgigs/"
+          class="hover:text-green-400 transition-colors"
+          ><!-- svelte-ignore element_invalid_self_closing_tag -->
+          <iconify-icon icon="mdi:instagram" /></a
         >
-        <a href="#" class="hover:text-green-400 transition-colors"
-          ><iconify-icon icon="mdi:linkedin" /></a
-        > -->
+        <!-- svelte-ignore a11y_consider_explicit_label -->
+        <a
+          href="https://web.facebook.com/profile.php?id=61580295505462"
+          class="hover:text-green-400 transition-colors"
+          ><iconify-icon icon="ic:twotone-facebook"></iconify-icon></a
+        >
       </div>
     </div>
   </div>
